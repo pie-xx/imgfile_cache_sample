@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as imgLib;
+import 'dart:io';
 
 void main() {
   runApp(const MyApp());
@@ -31,10 +34,36 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  late Image img;
+
+  Image make_counter_image(){
+    // dart:Image初期化
+    imgLib.Image image = imgLib.Image(512, 256);
+    // _counterの値を画像に描画
+    imgLib.drawString(image, imgLib.arial_48, 100, 100, "_counter=$_counter");
+    // 画像のメモリイメージを作成
+    List<int> _imageBytes = imgLib.encodeJpg(image);
+
+    // テンポラリファイル名は3つづつローテーションする
+    String imgname="img${_counter%3}.jpg";
+    // 画像をテンポラリファイルに書き込む
+    File _f = File(imgname );
+    _f.writeAsBytesSync(_imageBytes);
+
+    // 画像ファイルからイメージを作成
+    return Image.file(File(imgname));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    img = make_counter_image();
+  }
 
   void _incrementCounter() {
     setState(() {
       _counter++;
+      img = make_counter_image();
     });
   }
 
@@ -48,6 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            img,
             const Text(
               'You have pushed the button this many times:',
             ),
