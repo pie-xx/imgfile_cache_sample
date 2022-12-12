@@ -52,6 +52,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // 画像ファイルからイメージを作成
     return Image.file(File(imgname));
+    // キャッシュされないようにするには上の行を消して下の3行を生かす
+    //File fileM = File(imgname);
+    //final imageForUint8 = fileM.readAsBytesSync();
+    //return Image.memory(imageForUint8);
   }
 
   @override
